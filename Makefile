@@ -23,7 +23,7 @@ FFLAGS = -cpp
 OPENMPFLAGS = -fopenmp
 DEBUGFLAGS = -Og -std=f2008 -pedantic -Wall -Wextra -fcheck=all -ggdb -fbacktrace -ffpe-trap=zero,overflow,underflow,denormal
 PROFILEFLAGS = -pg
-RELEASEFLAGS = -O3 -march=native -flto
+RELEASEFLAGS = -O3 -flto
 
 #FC = ifort
 #FFLAGS = -fpp
@@ -32,15 +32,17 @@ RELEASEFLAGS = -O3 -march=native -flto
 #PROFILEFLAGS = -p
 #RELEASEFLAGS = -O3 -xHost -ipo
 
-debug:
-	$(FC) $(FFLAGS) $(OPENMPFLAGS) $(DEBUGFLAGS) ${SOURCES} -o peacemaker
-debug_serial:
-	$(FC) $(FFLAGS) $(DEBUGFLAGS) ${SOURCES} -o peacemaker
-release:
-	$(FC) $(FFLAGS) $(OPENMPFLAGS) $(RELEASEFLAGS) ${SOURCES} -o peacemaker
-release_serial:
-	$(FC) $(FFLAGS) $(RELEASEFLAGS) ${SOURCES} -o peacemaker
-profile:
-	$(FC) $(FFLAGS) $(PROFILEFLAGS) ${SOURCES} -o peacemaker
+vpath %.f90 app:subprojects/iso_varying_string
+
+debug: $(SOURCES)
+	$(FC) $(FFLAGS) $(OPENMPFLAGS) $(DEBUGFLAGS) $^ -o peacemaker
+debug_serial: $(SOURCES)
+	$(FC) $(FFLAGS) $(DEBUGFLAGS) $^ -o peacemaker
+release: $(SOURCES)
+	$(FC) $(FFLAGS) $(OPENMPFLAGS) $(RELEASEFLAGS) $^ -o peacemaker
+release_serial: $(SOURCES)
+	$(FC) $(FFLAGS) $(RELEASEFLAGS) $^ -o peacemaker
+profile: $(SOURCES)
+	$(FC) $(FFLAGS) $(PROFILEFLAGS) $^ -o peacemaker
 clean:
 	rm -rvf *.o *.mod

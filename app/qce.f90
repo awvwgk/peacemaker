@@ -243,13 +243,9 @@ module qce
                                 nr_isobars_computed = nr_isobars_computed + 1
                                 !$OMP END ATOMIC
                 
-#ifdef _OPENMP
-                                if (omp_get_thread_num() == 0) then
+                             !$ if (omp_get_thread_num() == 0) then
                                     call progress_bar(nr_isobars_computed, nr_isobars_total, global_data%progress_bar)
-                                end if
-#else           
-                                    call progress_bar(nr_isobars_computed, nr_isobars_total, global_data%progress_bar)
-#endif          
+                             !$ end if
                             end do
                         end do
                     end do
